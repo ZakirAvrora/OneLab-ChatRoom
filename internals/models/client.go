@@ -23,8 +23,8 @@ func NewClient(nick string, conn *websocket.Conn, room *ChatRoom) *Client {
 }
 
 const (
-	writeWait      = 10 * time.Second
-	pongWait       = 20 * time.Second
+	writeWait      = 5 * time.Second
+	pongWait       = 3 * time.Second
 	pingPeriod     = (pongWait * 9) / 10
 	maxMessageSize = 10000
 )
@@ -67,7 +67,6 @@ func (c *Client) WritePump() {
 		case message, ok := <-c.Msg:
 			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
-				// The WsServer closed the channel.
 				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
@@ -78,7 +77,6 @@ func (c *Client) WritePump() {
 			}
 			w.Write(message.Msg)
 
-			// Attach queued chat messages to the current websocket message.
 			n := len(c.Msg)
 			for i := 0; i < n; i++ {
 				w.Write([]byte{'\n'})

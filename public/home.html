@@ -5,10 +5,29 @@
     <title>HomePage</title>
 </head>
 <body>
+<h3>JOIN ROOM</h3>
 <form action="/room" method="get">
-    <label for="nick">Nick:</label><br>
+    <label for="nick">Choose nickname:</label><br>
     <input type="text" id="nick" name="nick"><br>
-    <input type="submit" value="Submit">
+
+    <label for="room">Choose Room:</label><br>
+    <select name="room" id="room">
+        {{range $key, $value := . }}
+        <option value="{{$key}}">{{$key}}</option>
+        {{end}}
+    </select>
+    <input type="submit" value="Enter room">
 </form>
+
+<br> <h3>CREATE ROOM</h3>
+<form action="/" method="post">
+    <label for="name">Choose chatroom name::</label><br>
+    <input type="text" id="name" name="name"><br>
+
+    <label for="capacity">Choose Capacity:</label><br>
+    <input type="text" id="capacity" name="capacity"><br>
+    <input type="submit" value="Create room">
+</form>
+
 </body>
 </html>

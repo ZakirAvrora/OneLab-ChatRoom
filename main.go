@@ -2,9 +2,7 @@ package main
 
 import (
 	"ZakirAvrora/ChatRoom/app"
-	"ZakirAvrora/ChatRoom/internals/models"
 	"ZakirAvrora/ChatRoom/internals/models/server"
-	"ZakirAvrora/ChatRoom/internals/repository/reddis"
 	"flag"
 	"github.com/go-redis/redis"
 	"log"
@@ -31,13 +29,8 @@ func main() {
 
 	rdb := InitRedis()
 
-	store := reddis.NewStore(rdb)
-
-	room := models.NewChatRoom("general", 10, store)
-	go room.RunChatRoom()
-
-	intSrv := server.NewServer()
-	intSrv.Rooms["general"] = room
+	intSrv := server.NewServer(rdb)
+	intSrv.CreateNewRoom("general", 10)
 
 	app := &app.Application{
 		ErrorLog: errorLog,
