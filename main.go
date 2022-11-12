@@ -3,8 +3,8 @@ package main
 import (
 	"ZakirAvrora/ChatRoom/app"
 	"ZakirAvrora/ChatRoom/internals/models"
+	"ZakirAvrora/ChatRoom/internals/models/server"
 	"ZakirAvrora/ChatRoom/internals/repository/reddis"
-	"ZakirAvrora/ChatRoom/server"
 	"flag"
 	"github.com/go-redis/redis"
 	"log"
