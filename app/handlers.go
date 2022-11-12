@@ -36,13 +36,21 @@ func (app *Application) homeHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		roomName := r.Form["name"][0]
+		roomName := strings.TrimSpace(r.Form["name"][0])
 		cap := r.Form["capacity"][0]
 		capInt, err := strconv.Atoi(cap)
-		if err != nil || capInt < 1 || strings.TrimSpace(roomName) == "" {
+		if err != nil || capInt < 1 || roomName == "" {
 			app.badRequest(w)
 			return
 		}
+
+		app.Server.Mu.RLock()
+		if _, ok := app.Server.Rooms[roomName]; ok {
+			app.InfoLog.Println("Room already exist")
+			http.Redirect(w, r, r.URL.Path, http.StatusSeeOther)
+			return
+		}
+		app.Server.Mu.RUnlock()
 
 		app.Server.CreateNewRoom(roomName, capInt)
 		http.Redirect(w, r, r.URL.Path, http.StatusSeeOther)
