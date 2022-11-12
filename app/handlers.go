@@ -2,7 +2,6 @@ package app
 
 import (
 	"ZakirAvrora/ChatRoom/internals/models"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -30,8 +29,8 @@ func (app *Application) wsHandler(w http.ResponseWriter, r *http.Request) {
 	client := models.NewClient("Ananymous", conn, app.Server.Rooms["general"])
 	app.Server.Rooms["general"].Register <- client
 
-	fmt.Println("New Client joined the hub!")
-	fmt.Println(client)
+	//fmt.Println("New Client joined the hub!")
+	//fmt.Println(client)
 
 	go client.WritePump()
 	go client.ReadPump()

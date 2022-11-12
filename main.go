@@ -3,13 +3,24 @@ package main
 import (
 	"ZakirAvrora/ChatRoom/app"
 	"ZakirAvrora/ChatRoom/internals/models"
+	"ZakirAvrora/ChatRoom/internals/repository/reddis"
 	"ZakirAvrora/ChatRoom/server"
 	"flag"
+	"github.com/go-redis/redis"
 	"log"
 	"net/http"
 	"os"
 	"time"
 )
+
+func InitRedis() *redis.Client {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+	return rdb
+}
 
 func main() {
 	addr := flag.String("port", "8080", "Network port")
@@ -18,7 +29,11 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate)
 	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	room := models.NewChatRoom("general", 10, nil)
+	rdb := InitRedis()
+
+	store := reddis.NewStore(rdb)
+
+	room := models.NewChatRoom("general", 10, store)
 	go room.RunChatRoom()
 
 	intSrv := server.NewServer()
