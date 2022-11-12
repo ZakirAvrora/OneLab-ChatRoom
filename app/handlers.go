@@ -27,7 +27,7 @@ func (app *Application) wsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	client := models.NewClient("Ananymous", conn, app.Server.Rooms["general"])
+	client := models.NewClient("Anonymous", conn, app.Server.Rooms["general"])
 	app.Server.Rooms["general"].Register <- client
 
 	fmt.Println("New Client joined the hub!")
