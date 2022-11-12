@@ -1,7 +1,7 @@
 package app
 
 import (
-	"ZakirAvrora/ChatRoom/internals/models"
+	models2 "ZakirAvrora/ChatRoom/internals/models"
 	"errors"
 	"html/template"
 	"net/http"
@@ -92,6 +92,7 @@ func (app *Application) wsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := r.ParseForm(); err != nil {
+		app.ErrorLog.Println("something went wrong")
 		app.serverError(w, err)
 		return
 	}
@@ -112,17 +113,16 @@ func (app *Application) wsHandler(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	var client *models.Client
-	client = models.NewClient("Anonymous", conn, app.Server.Rooms["general"])
-	if len(name) > 1 {
-		client = models.NewClient(name, conn, room)
+	var client *models2.Client
+	//client = models2.NewClient("Anonymous", conn, app.Server.Rooms["general"])
 
-	}
+	client = models2.NewClient(name, conn, room)
+
 	app.Server.Rooms["general"].Register <- client
 
 	go client.WritePump()
 	go client.ReadPump()
-	client.Room.Broadcast <- models.Message{From: client, Msg: []byte(models.MsgUserIn(client))}
+	client.Room.Broadcast <- models2.Message{From: client, Msg: []byte(models2.MsgUserIn(client))}
 	client.Room.Register <- client
 }
 
@@ -150,15 +150,15 @@ func GetNick(r *http.Request) string {
 	return name
 }
 
-func GetRoom(app *Application, r *http.Request) (*models.ChatRoom, error) {
-	roomName := r.Form["room"]
-	var room *models.ChatRoom
+func GetRoom(app *Application, r *http.Request) (*models2.ChatRoom, error) {
+	roomName := getRoomName(r)
+	var room *models2.ChatRoom
 
-	if len(roomName) == 0 || strings.TrimSpace(roomName[0]) == "" {
-		room = app.Server.Rooms["general"]
+	if strings.TrimSpace(roomName) == "general" {
+		room = app.Server.Rooms[roomName]
 	} else {
 		app.Server.Mu.RLock()
-		r, ok := app.Server.Rooms[roomName[0]]
+		r, ok := app.Server.Rooms[roomName]
 		app.Server.Mu.RUnlock()
 		if ok {
 			room = r
@@ -169,4 +169,12 @@ func GetRoom(app *Application, r *http.Request) (*models.ChatRoom, error) {
 	}
 
 	return room, nil
+}
+
+func getRoomName(r *http.Request) string {
+	roomName := r.Form["room"]
+	if len(roomName) == 0 || strings.TrimSpace(roomName[0]) == "" {
+		return "general"
+	}
+	return roomName[0]
 }
