@@ -2,7 +2,8 @@ package models
 
 import (
 	"ZakirAvrora/ChatRoom/internals/repository"
-	"fmt"
+	"github.com/gorilla/websocket"
+	"log"
 )
 
 type ChatRoom struct {
@@ -36,13 +37,25 @@ func (r *ChatRoom) RunChatRoom() {
 		case client := <-r.Unregister:
 			r.unregisterMember(client)
 		case message := <-r.Broadcast:
-			fmt.Println("Broadcasting message: ", message)
 			r.broadcastMsg(message)
 		}
 	}
 }
 
 func (r *ChatRoom) registerMember(client *Client) {
+	history, err := r.HistoryStore.GetAllMsg()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	w, err := client.Conn.NextWriter(websocket.TextMessage)
+	if err != nil {
+		return
+	}
+	for _, msg := range history {
+		w.Write([]byte(msg + "\n"))
+	}
+
 	r.Members[client] = true
 }
 
@@ -54,6 +67,10 @@ func (r *ChatRoom) unregisterMember(client *Client) {
 }
 
 func (r *ChatRoom) broadcastMsg(msg Message) {
+	if err := r.HistoryStore.SaveMsg(string(msg.Msg)); err != nil {
+		log.Println(err)
+	}
+
 	for member := range r.Members {
 		member.Msg <- msg
 	}
