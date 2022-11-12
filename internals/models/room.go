@@ -2,8 +2,6 @@ package models
 
 import (
 	"ZakirAvrora/ChatRoom/internals/repository"
-	"fmt"
-	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"log"
 )
@@ -39,7 +37,6 @@ func (r *ChatRoom) RunChatRoom() {
 		case client := <-r.Unregister:
 			r.unregisterMember(client)
 		case message := <-r.Broadcast:
-			//fmt.Println("Broadcasting message: ", message)
 			r.broadcastMsg(message)
 		}
 	}
@@ -47,15 +44,18 @@ func (r *ChatRoom) RunChatRoom() {
 
 func (r *ChatRoom) registerMember(client *Client) {
 	history, err := r.HistoryStore.GetAllMsg()
-	fmt.Println(history)
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	w, err := client.Conn.NextWriter(websocket.TextMessage)
 	if err != nil {
 		return
 	}
-	w.Write([]byte(history))
+	for _, msg := range history {
+		w.Write([]byte(msg + "\n"))
+	}
+
 	r.Members[client] = true
 }
 
@@ -67,9 +67,7 @@ func (r *ChatRoom) unregisterMember(client *Client) {
 }
 
 func (r *ChatRoom) broadcastMsg(msg Message) {
-	myUuid := uuid.New()
-	fmt.Println(myUuid, string(msg.Msg))
-	if err := r.HistoryStore.SaveMsg(myUuid.String(), string(msg.Msg)); err != nil {
+	if err := r.HistoryStore.SaveMsg(string(msg.Msg)); err != nil {
 		log.Println(err)
 	}
 
