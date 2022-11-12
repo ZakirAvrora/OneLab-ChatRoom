@@ -112,10 +112,13 @@ func (app *Application) wsHandler(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	client := models.NewClient("Anonymous", conn, app.Server.Rooms["general"])
-	app.Server.Rooms["general"].Register <- client
+	var client *models.Client
+	client = models.NewClient("Anonymous", conn, app.Server.Rooms["general"])
+	if len(name) > 1 {
+		client = models.NewClient(name, conn, room)
 
-	client := models.NewClient(name, conn, room)
+	}
+	app.Server.Rooms["general"].Register <- client
 
 	go client.WritePump()
 	go client.ReadPump()
