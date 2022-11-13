@@ -3,13 +3,17 @@
 <head>
     <title>Chat</title>
     <script src="static/app.js"></script>
-    <link rel="stylesheet" href="static/style.css"/>
+    <link rel="stylesheet" href="static/main.css"/>
 </head>
-<body>
+<body class="max-w-4xl mx-auto">
 <div id="log"></div>
-<form id="form">
-    <input type="text" id="msg" size="64" autofocus/>
-    <input type="submit" value="Send"/>
+<form id="form" class="w-full max-w-xl mt-10">
+    <div class="flex items-center border-b border-purple-500 py-2">
+        <input type="text" id="msg" size="64"
+               class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" autofocus/>
+        <input type="submit" value="Send" class="flex-shrink-0 bg-purple-500 hover:bg-purple-700 border-purple-500 hover:border-purple-700 text-sm border-4 text-white py-1 px-2 rounded"/>
+    </div>
 </form>
+<link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 </body>
 </html>
