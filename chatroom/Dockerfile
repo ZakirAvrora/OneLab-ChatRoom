@@ -8,4 +8,4 @@ FROM alpine:3.16
 COPY --from=builder /golang-app .
 COPY --from=builder /public /public
 EXPOSE 8080:8080
-ENTRYPOINT ["./golang-app"]
+ENTRYPOINT ["./golang-app", "-redis-address", "redis-db"]
