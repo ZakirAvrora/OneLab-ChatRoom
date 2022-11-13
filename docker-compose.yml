@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  chatroom:
+    build:
+      context: ./chatroom
+      args:
+        redis-host: "redis-db"
+    ports:
+      - '8080:8080'
+    depends_on:
+      - redis-db
+    container_name: 'chatroom-app'
+
+  redis-db:
+    build: ./redis
+    ports:
+      - '6379:6379'
+    container_name: 'redis-chatroom'
+
+networks:
+  internal:
+    driver: 'bridge'
+
