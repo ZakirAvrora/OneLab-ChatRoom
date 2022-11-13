@@ -7,6 +7,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -o golang-app .
 FROM alpine:3.16
 COPY --from=builder /golang-app .
 COPY --from=builder /public /public
-RUN ls -a
 EXPOSE 8080:8080
 ENTRYPOINT ["./golang-app"]
