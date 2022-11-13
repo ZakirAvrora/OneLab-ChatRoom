@@ -5,6 +5,7 @@
     <title>HomePage</title>
 </head>
 <body>
+
 <h3>JOIN ROOM</h3>
 <form action="/room" method="get">
     <label for="nick">Choose nickname:</label><br>
@@ -19,9 +20,10 @@
     <input type="submit" value="Enter room">
 </form>
 
-<br> <h3>CREATE ROOM</h3>
-<form action="/" method="post">
-    <label for="name">Choose chatroom name::</label><br>
+<br>
+<h3>CREATE ROOM</h3>
+<form action="/chatroom/public" method="post">
+    <label for="name">Choose chatroom name:</label><br>
     <input type="text" id="name" name="name"><br>
 
     <label for="capacity">Choose Capacity:</label><br>
