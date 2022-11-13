@@ -37,8 +37,8 @@ func (app *Application) homeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		roomName := strings.TrimSpace(r.Form["name"][0])
-		cap := r.Form["capacity"][0]
-		capInt, err := strconv.Atoi(cap)
+		capacity := r.Form["capacity"][0]
+		capInt, err := strconv.Atoi(capacity)
 		if err != nil || capInt < 1 || roomName == "" {
 			app.badRequest(w)
 			return
@@ -114,11 +114,8 @@ func (app *Application) wsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var client *models2.Client
-	//client = models2.NewClient("Anonymous", conn, app.Server.Rooms["general"])
 
 	client = models2.NewClient(name, conn, room)
-
-	app.Server.Rooms["general"].Register <- client
 
 	go client.WritePump()
 	go client.ReadPump()
