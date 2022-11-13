@@ -4,32 +4,36 @@
     <meta charset="UTF-8">
     <title>HomePage</title>
 </head>
-<body>
+<body class="max-w-4xl mx-auto">
 
-<h3>JOIN ROOM</h3>
-<form action="/room" method="get">
-    <label for="nick">Choose nickname:</label><br>
-    <input type="text" id="nick" name="nick"><br>
+<div class="w-full max-w-xs">
+    <h3 class="font-bold mt-5 mb-5 text-lg">JOIN ROOM</h3>
+    <form action="/room" method="get" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <label for="nick" class="block text-gray-700 text-sm font-bold mb-2">Choose nickname:</label>
+        <input type="text" id="nick" name="nick" class="mt-1 mb-5 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"><br>
 
-    <label for="room">Choose Room:</label><br>
-    <select name="room" id="room">
-        {{range $key, $value := . }}
-        <option value="{{$key}}">{{$key}}</option>
-        {{end}}
-    </select>
-    <input type="submit" value="Enter room">
-</form>
+        <label for="room" class="block text-gray-700 text-sm font-bold mb-2">Choose Room:</label>
+        <select class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" name="room" id="room">
+            {{range $key, $value := . }}
+            <option value="{{$key}}">{{$key}}</option>
+            {{end}}
+        </select>
+        <input class="mt-5 shadow bg-purple-500 hover:bg-purple-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit" value="Enter room">
+    </form>
+</div>
 
-<br>
-<h3>CREATE ROOM</h3>
-<form action="/" method="post">
-    <label for="name">Choose chatroom name:</label><br>
-    <input type="text" id="name" name="name"><br>
 
-    <label for="capacity">Choose Capacity:</label><br>
-    <input type="text" id="capacity" name="capacity"><br>
-    <input type="submit" value="Create room">
-</form>
+<div class="w-full max-w-xs">
+    <h3 class="font-bold mt-5 mb-5 text-lg">CREATE ROOM</h3>
+    <form action="/" method="post" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Choose chatroom name:</label>
+        <input class="mt-1 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  type="text" id="name" name="name"><br>
 
+        <label for="capacity" class="block text-gray-700 text-sm font-bold mb-1 mt-3">Choose Capacity:</label>
+        <input  class="mt-1 mb-5 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="capacity" name="capacity"><br>
+        <input  class="mt-5 shadow bg-purple-500 hover:bg-purple-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit" value="Create room">
+    </form>
+</div>
+<link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 </body>
 </html>
